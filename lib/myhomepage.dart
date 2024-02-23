@@ -107,10 +107,10 @@ class _MyformState extends State<Myform> {
                               if (_formKey.currentState!.validate()) {
                                 // If the form is valid, proceed
                                 // You can process the form data here
-                                String name = _nameController.text;
-                                String email = _emailController.text;
-                                String password = _passwordController.text;
-                                String batch = _batchController.text;
+                               // String name = _nameController.text;
+                               // String email = _emailController.text;
+                               // String password = _passwordController.text;
+                               // String batch = _batchController.text;
                                 // For demonstration, print the data
                                 //print('$name');
                                 //print('$email');
