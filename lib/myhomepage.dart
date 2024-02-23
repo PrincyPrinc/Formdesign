@@ -55,24 +55,28 @@ class _MyformState extends State<Myform> {
                         icon: const Icon(Icons.person),
                         isPasswordField: false,
                         focusNode: myFocusNode,
+                        regex: RegExp(r'^[a-z A-z]+$'),
                       ),
                       CustomField(
                         controller: _emailController,
                         hint: reusableStrings[1],
                         icon: const Icon(Icons.email),
                         isPasswordField: false,
+                        regex: RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w]{2,4}'),
                       ),
                       CustomField(
                         controller: _passwordController,
                         hint: reusableStrings[2],
                         icon: const Icon(Icons.lock),
                         isPasswordField: true,
+                        //  regex: RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$'),
                       ),
                       CustomField(
                         controller: _batchController,
                         hint: reusableStrings[3],
                         icon: const Icon(Icons.batch_prediction),
                         isPasswordField: false,
+                        // regex: RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$'),
                       ),
                       Row(
                         children: [
@@ -82,6 +86,7 @@ class _MyformState extends State<Myform> {
                                 hint: '+77',
                                 controller: _phoneController,
                                 isPasswordField: false,
+                                regex: RegExp(r'\+94$'),
                               )),
                           const SizedBox(
                             width: 10.0,
@@ -91,6 +96,7 @@ class _MyformState extends State<Myform> {
                               hint: reusableStrings[4],
                               controller: _numberController,
                               isPasswordField: false,
+                              regex: RegExp(r'^[0-9]{9}$'),
                             ),
                           )
                         ],
@@ -107,10 +113,10 @@ class _MyformState extends State<Myform> {
                               if (_formKey.currentState!.validate()) {
                                 // If the form is valid, proceed
                                 // You can process the form data here
-                               // String name = _nameController.text;
-                               // String email = _emailController.text;
-                               // String password = _passwordController.text;
-                               // String batch = _batchController.text;
+                                ///String name = _nameController.text;
+                                //String email = _emailController.text;
+                                //String password = _passwordController.text;
+                                //String batch = _batchController.text;
                                 // For demonstration, print the data
                                 //print('$name');
                                 //print('$email');
@@ -138,7 +144,12 @@ class _MyformState extends State<Myform> {
                                       MaterialStateProperty.all<Color>(
                                           Colors.green)),
                               onPressed: () {
-                                _formKey.currentState?.reset();
+                                _nameController.text = '';
+                                _emailController.text = '';
+                                _passwordController.text = '';
+                                _batchController.text = '';
+                                _passwordController.text = '';
+                                _numberController.text = '';
                                 myFocusNode.requestFocus();
                               },
                               child: const Text('reset'))
@@ -157,19 +168,22 @@ class _MyformState extends State<Myform> {
 }
 
 class CustomField extends StatefulWidget {
-  CustomField(
-      {super.key,
-      required this.hint,
-      this.icon,
-      required this.controller,
-      required this.isPasswordField,
-      this.focusNode});
+  CustomField({
+    super.key,
+    required this.hint,
+    this.icon,
+    required this.controller,
+    required this.isPasswordField,
+    this.focusNode,
+    this.regex,
+  });
 
   final String hint;
   final Icon? icon;
   final TextEditingController controller;
   bool isPasswordField = true;
   late FocusNode? focusNode;
+  final RegExp? regex;
 
   @override
   State<CustomField> createState() => _CustomFieldState();
@@ -242,8 +256,9 @@ class _CustomFieldState extends State<CustomField> {
                       borderSide: BorderSide(color: Colors.redAccent)),
                   errorText: errorTextValue.isEmpty ? null : errorTextValue),
               validator: (value) {
-                if (value!.isEmpty) {
-                  return 'Please enter your ${widget.hint}';
+                if (value!.isEmpty ||
+                    widget.regex != null && !widget.regex!.hasMatch(value!)) {
+                  return 'Please enter your ${widget.hint} correctly';
                 }
                 return null;
               },
